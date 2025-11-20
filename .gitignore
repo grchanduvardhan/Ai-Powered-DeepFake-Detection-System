@@ -1,0 +1,10 @@
+# Python Virtual Environment
+venv/
+
+# Python compiled files
+__pycache__/
+*.pyc
+
+# Large model file types (already handled by LFS, but good practice to ignore)
+*.h5
+*.onnx
