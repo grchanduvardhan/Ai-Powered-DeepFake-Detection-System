@@ -1,0 +1,440 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI DeepFake Detection System | Anaglyph Security</title>
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <style>
+        /* Define the custom color palette and font */
+        :root {
+            --color-bg-deep: #131a28;
+            --color-blue-electric: #00FFFF;
+            --color-red-security: #FF0040;
+            --color-text-main: #d0faff; /* Light cyan text */
+            --color-border: rgba(0, 255, 255, 0.2);
+        }
+
+        /* Base styles */
+        body {
+            font-family: 'IBM Plex Mono', monospace;
+            background-color: var(--color-bg-deep);
+            color: var(--color-text-main);
+        }
+
+        /* Custom animations */
+        @keyframes spin { to { transform: rotate(360deg); } }
+        @keyframes pulse-anaglyph {
+            0% { box-shadow: 0 0 10px var(--color-blue-electric), 0 0 20px var(--color-red-security); }
+            50% { box-shadow: 0 0 15px var(--color-blue-electric), 0 0 25px var(--color-red-security); }
+            100% { box-shadow: 0 0 10px var(--color-blue-electric), 0 0 20px var(--color-red-security); }
+        }
+        @keyframes glitch {
+            0% { text-shadow: 2px 0 var(--color-red-security), -2px 0 var(--color-blue-electric); transform: translate(0); }
+            20% { text-shadow: -2px 0 var(--color-red-security), 2px 0 var(--color-blue-electric); transform: translate(2px, -2px); }
+            40% { text-shadow: 4px 0 var(--color-red-security), -4px 0 var(--color-blue-electric); transform: translate(-4px, 4px); }
+            60% { text-shadow: -4px 0 var(--color-red-security), 4px 0 var(--color-blue-electric); transform: translate(4px, -4px); }
+            80% { text-shadow: 0 0 var(--color-red-security), 0 0 var(--color-blue-electric); transform: translate(0); }
+            100% { text-shadow: 2px 0 var(--color-red-security), -2px 0 var(--color-blue-electric); transform: translate(0); }
+        }
+
+        .animate-spin { animation: spin 1s linear infinite; }
+        .animate-pulse-anaglyph { animation: pulse-anaglyph 3s infinite alternate; }
+        .glitch-text { text-shadow: 2px 0 var(--color-red-security), -2px 0 var(--color-blue-electric); }
+        .glitch-hover:hover { animation: glitch 0.5s infinite linear; }
+        .fade-in { animation: fadeIn 0.8s ease-out; }
+
+        /* Anaglyph Security Container */
+        .security-panel {
+            background-color: rgba(2, 6, 23, 0.8); /* Dark background with slight transparency */
+            border: 1px solid var(--color-border);
+            box-shadow: 0 0 20px rgba(0, 255, 255, 0.1);
+            border-radius: 8px;
+        }
+
+        /* Gradient Text (Anaglyph Style) */
+        .anaglyph-text {
+            color: var(--color-text-main);
+            text-shadow: 2px 0 var(--color-red-security), -2px 0 var(--color-blue-electric);
+        }
+
+        /* Drop Zone */
+        .drop-zone {
+            transition: all 0.3s ease;
+            border: 2px dashed var(--color-border);
+            background-color: rgba(0, 255, 255, 0.03);
+        }
+
+        .drop-zone.drag-over {
+            border-color: var(--color-blue-electric);
+            background-color: rgba(0, 255, 255, 0.08);
+            box-shadow: 0 0 15px var(--color-blue-electric);
+        }
+
+        /* Main Button Style */
+        .btn-anaglyph {
+            background: linear-gradient(90deg, #00FFFF, #00C0C0);
+            box-shadow: 0 0 15px var(--color-blue-electric);
+            color: var(--color-bg-deep);
+            font-weight: 700;
+        }
+        .btn-anaglyph:hover {
+            box-shadow: 0 0 25px var(--color-blue-electric);
+            transform: scale(1.03);
+        }
+        .btn-anaglyph:disabled {
+            background: #4a5568;
+            box-shadow: none;
+            color: #a0aec0;
+            cursor: not-allowed;
+            transform: none;
+        }
+
+        /* Confidence Meter */
+        .meter-fill-real {
+            background-color: var(--color-blue-electric);
+            box-shadow: 0 0 8px var(--color-blue-electric);
+        }
+        .meter-fill-fake {
+            background-color: var(--color-red-security);
+            box-shadow: 0 0 8px var(--color-red-security);
+        }
+        
+    </style>
+</head>
+<body class="min-h-screen overflow-x-hidden pt-12 pb-20">
+
+    <header class="mb-12">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-col items-center justify-center">
+                <div class="relative mb-4">
+                    <div class="absolute inset-0 bg-gradient-to-r from-cyan-400 to-red-500 rounded-full blur-2xl opacity-50 animate-pulse-anaglyph"></div>
+                    <div class="relative bg-gray-900 rounded-full p-4 border border-cyan-400">
+                        <i class="fas fa-user-secret text-3xl text-cyan-400"></i> 
+                    </div>
+                </div>
+                <h1 class="text-6xl font-extrabold anaglyph-text mb-2 text-center glitch-hover">
+                    AI-Powered DeepFake Detection System
+                </h1>
+                <p class="text-sm text-red-500 font-medium tracking-widest uppercase">
+                    Guarding truth in a world of fakes.
+                </p>
+                <div class="flex items-center justify-center space-x-3 mt-3">
+                    <div class="w-3 h-3 bg-green-400 rounded-full animate-pulse shadow-lg shadow-green-500/50"></div>
+                    <span class="text-xs text-green-400 font-semibold">STATUS: Live</span>
+                </div>
+            </div>
+        </div>
+    </header>
+    
+    <main class="container mx-auto px-4 max-w-4xl">
+        
+        <div class="security-panel p-8 mb-12 fade-in">
+            <h2 class="text-2xl font-bold text-cyan-400 mb-8 text-center border-b border-cyan-400/50 pb-4">
+                <i class="fas fa-hdd mr-3"></i>
+                INPUT VECTOR
+            </h2>
+
+            <div id="dropZone" class="drop-zone rounded-lg p-12 text-center cursor-pointer hover:shadow-xl transition-all duration-300">
+                <input type="file" id="fileInput" class="hidden" accept=".png,.jpg,.jpeg,.mp4,.mov,.avi">
+
+                <div id="uploadContent">
+                    <div class="relative mb-6">
+                        <i class="fas fa-plus-circle text-6xl text-cyan-400 relative glitch-text"></i>
+                    </div>
+                    <p class="text-xl text-white mb-3 font-semibold">DROP FILE HERE</p>
+                    <p class="text-sm text-gray-400 mb-6">or click to initiate file search protocol</p>
+                    <button id="browseBtn" class="btn-anaglyph px-8 py-2 rounded-sm transition-all duration-200 text-sm">
+                        <i class="fas fa-search-plus mr-2"></i>
+                        BROWSE LOCAL FILES
+                    </button>
+                    <p class="text-xs text-gray-500 mt-6">
+                        ACCEPTING: **PNG, JPG, MP4, MOV, AVI**
+                    </p>
+                </div>
+                
+                <div id="filePreview" class="hidden">
+                    <div class="flex flex-col items-center justify-center space-y-4">
+                        <div id="previewContent" class="p-2 border border-red-500/50">
+                            </div>
+                        <p id="fileName" class="text-sm text-cyan-400 glitch-text"></p>
+                        <button id="removeFileBtn" class="text-red-500 hover:text-white transition duration-200">
+                            <i class="fas fa-trash-alt text-lg"></i> REMOVE
+                        </button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="mt-8 text-center">
+                <button id="detectBtn" class="btn-anaglyph px-12 py-3 rounded-sm transition-all duration-300 font-extrabold text-lg disabled:cursor-not-allowed" disabled>
+                    <span id="detectBtnText">
+                        <i class="fas fa-bolt mr-3"></i>
+                        EXECUTE ANALYSIS
+                    </span>
+                    <span id="detectBtnSpinner" class="hidden inline-block ml-3">
+                        <i class="fas fa-sync animate-spin"></i>
+                    </span>
+                </button>
+            </div>
+        </div>
+        
+        <div id="resultsSection" class="hidden security-panel p-8 fade-in">
+            <h2 class="text-2xl font-bold anaglyph-text mb-6 text-center border-b border-red-500/50 pb-4">
+                <i class="fas fa-exclamation-triangle mr-2"></i>
+                FORENSIC REPORT
+            </h2>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                <div class="lg:col-span-2 space-y-3">
+                    <h3 class="text-lg font-semibold text-cyan-400 border-l-2 border-cyan-400 pl-3">Source Media Stream</h3>
+                    <div id="originalMedia" class="bg-black border border-cyan-400/30 p-2 flex items-center justify-center min-h-[250px] shadow-inner shadow-black/50">
+                        <span class="text-gray-600">Media loading...</span>
+                    </div>
+                </div>
+                
+                <div class="lg:col-span-1 space-y-4">
+                    <h3 class="text-lg font-semibold text-red-500 border-l-2 border-red-500 pl-3">FINAL VERDICT</h3>
+                    <div id="resultContent" class="bg-black/50 border border-red-500/30 p-4 shadow-xl">
+                        </div>
+                    
+                    </div>
+            </div>
+        </div>
+        
+        <div id="errorMessage" class="hidden mt-6 bg-red-900/40 border border-red-500 rounded-sm p-4 fade-in">
+            <div class="flex items-center space-x-4">
+                <i class="fas fa-exclamation-circle text-2xl text-red-400 animate-pulse"></i>
+                <p id="errorText" class="text-red-300 font-semibold text-base"></p>
+            </div>
+        </div>
+        
+    </main>
+    
+    
+    
+    <script>
+        // --- JAVASCRIPT LOGIC (Updated to reflect new CSS classes) ---
+
+        // DOM Elements
+        const dropZone = document.getElementById('dropZone');
+        const fileInput = document.getElementById('fileInput');
+        const browseBtn = document.getElementById('browseBtn');
+        const detectBtn = document.getElementById('detectBtn');
+        const detectBtnText = document.getElementById('detectBtnText');
+        const detectBtnSpinner = document.getElementById('detectBtnSpinner');
+        const uploadContent = document.getElementById('uploadContent');
+        const filePreview = document.getElementById('filePreview');
+        const previewContent = document.getElementById('previewContent');
+        const fileName = document.getElementById('fileName');
+        const removeFileBtn = document.getElementById('removeFileBtn');
+        const resultsSection = document.getElementById('resultsSection');
+        const originalMedia = document.getElementById('originalMedia');
+        const resultContent = document.getElementById('resultContent');
+        const errorMessage = document.getElementById('errorMessage');
+        const errorText = document.getElementById('errorText');
+        // Removed faceSection and detectedFaceImg from DOM elements
+        // const faceSection = document.getElementById('faceSection');
+        // const detectedFaceImg = document.getElementById('detectedFaceImg');
+        
+        let selectedFile = null;
+        let filePreviewUrl = null;
+        
+        // Helper function to create the confidence meter HTML
+        function createConfidenceMeter(confidence, isFake) {
+            const width = (confidence * 100).toFixed(1);
+            const colorClass = isFake ? 'meter-fill-fake' : 'meter-fill-real';
+
+            return `
+                <div class="mt-4">
+                    <p class="text-xs font-medium text-gray-400 mb-1">CONFIDENCE</p>
+                    <div class="confidence-meter-base w-full h-2 rounded-full border border-gray-600">
+                        <div class="confidence-meter-fill ${colorClass}" style="width: ${width}%;"></div>
+                    </div>
+                    <p class="text-sm font-bold mt-1 ${isFake ? 'text-red-400' : 'text-cyan-400'}">${width}%</p>
+                </div>
+            `;
+        }
+
+        // Browse button click
+        browseBtn.addEventListener('click', () => {
+            fileInput.click();
+        });
+        
+        // File input change
+        fileInput.addEventListener('change', (e) => {
+            handleFileSelect(e.target.files[0]);
+        });
+        
+        // Drag and drop handlers
+        dropZone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            dropZone.classList.add('drag-over');
+        });
+        
+        dropZone.addEventListener('dragleave', () => {
+            dropZone.classList.remove('drag-over');
+        });
+        
+        dropZone.addEventListener('drop', (e) => {
+            e.preventDefault();
+            dropZone.classList.remove('drag-over');
+            
+            const file = e.dataTransfer.files[0];
+            if (file) {
+                handleFileSelect(file);
+            }
+        });
+        
+        // Remove file button
+        removeFileBtn.addEventListener('click', (e) => {
+            e.stopPropagation(); 
+            resetFileSelection();
+        });
+        
+        // Detect button click
+        detectBtn.addEventListener('click', async () => {
+            if (!selectedFile) return;
+            await mockDetection();
+        });
+
+        // Mock Detection Function (Simulating Server Request)
+        async function mockDetection() {
+            detectBtn.disabled = true;
+            detectBtnText.innerHTML = '<i class="fas fa-sync-alt mr-3 animate-spin"></i> PROCESSING DATA...';
+            detectBtnSpinner.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+
+            await new Promise(resolve => setTimeout(resolve, 3000)); 
+
+            const isFake = Math.random() < 0.6; // Higher chance of FAKE
+            const confidence = Math.random() * 0.2 + (isFake ? 0.78 : 0.68); // Higher confidence
+            const rawScore = Math.random() * 100;
+
+            const mockResult = {
+                status: 'success',
+                prediction: isFake ? 'DEEPFAKE DETECTED - SECURITY BREACH' : 'AUTHENTIC MEDIA - STATUS CLEAR',
+                confidence: confidence,
+                raw_score: rawScore,
+                // face_detected: selectedFile.type.startsWith('image/') && Math.random() < 0.8, // Face detection for images - REMOVED
+                // face_image: isFake ? '/mock-fake-face.png' : '/mock-real-face.png' // Placeholder for image data - REMOVED
+            };
+
+            detectBtn.disabled = false;
+            detectBtnText.innerHTML = '<i class="fas fa-bolt mr-3"></i> EXECUTE ANALYSIS';
+            detectBtnSpinner.classList.add('hidden');
+
+            displayResults(mockResult);
+        }
+
+        
+        // Handle file selection
+        function handleFileSelect(file) {
+            const allowedExtensions = ['.png', '.jpg', '.jpeg', '.mp4', '.mov', '.avi'];
+            const fileExtension = '.' + file.name.split('.').pop().toLowerCase();
+            
+            if (!allowedExtensions.includes(fileExtension)) {
+                showError('INVALID FILE TYPE. ONLY PNG, JPG, JPEG, MP4, MOV, or AVI allowed.');
+                return;
+            }
+            
+            selectedFile = file;
+            fileName.textContent = file.name;
+            
+            if (filePreviewUrl) URL.revokeObjectURL(filePreviewUrl); 
+            filePreviewUrl = URL.createObjectURL(file);
+
+            const previewClasses = "max-w-full max-h-32 border-2 border-cyan-400";
+            const originalMediaClasses = "max-w-full border-2 border-red-500/50";
+            
+            if (file.type.startsWith('image/')) {
+                previewContent.innerHTML = `<img src="${filePreviewUrl}" alt="Preview" class="${previewClasses}">`;
+                originalMedia.innerHTML = `<img src="${filePreviewUrl}" alt="Original" class="${originalMediaClasses}">`;
+            } else if (file.type.startsWith('video/')) {
+                previewContent.innerHTML = `<video src="${filePreviewUrl}" class="${previewClasses}"></video>`;
+                originalMedia.innerHTML = `<video src="${filePreviewUrl}" controls class="${originalMediaClasses}"></video>`;
+            } else {
+                 // Placeholder for non-visual files
+                previewContent.innerHTML = `<div class="text-center p-2 text-gray-500"><i class="fas fa-file-code text-4xl"></i><p class="text-xs">File Loaded</p></div>`;
+                originalMedia.innerHTML = `<span class="text-gray-600">File loaded: ${file.name}. Ready for processing.</span>`;
+            }
+            
+            uploadContent.classList.add('hidden');
+            filePreview.classList.remove('hidden');
+            detectBtn.disabled = false;
+            resultsSection.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+        }
+        
+        // Reset file selection
+        function resetFileSelection() {
+            selectedFile = null;
+            if (filePreviewUrl) {
+                URL.revokeObjectURL(filePreviewUrl);
+                filePreviewUrl = null;
+            }
+            fileInput.value = '';
+            uploadContent.classList.remove('hidden');
+            filePreview.classList.add('hidden');
+            detectBtn.disabled = true;
+            resultsSection.classList.add('hidden');
+            errorMessage.classList.add('hidden');
+            originalMedia.innerHTML = `<span class="text-gray-600">Media loading...</span>`;
+        }
+        
+        // Display results
+        function displayResults(result) {
+            
+            const isFake = result.prediction.includes('DETECTED');
+            const icon = isFake ? 'fa-exclamation-triangle' : 'fa-shield-alt';
+            const colorClass = isFake ? 'text-red-400' : 'text-cyan-400';
+            const borderClass = isFake ? 'border-red-500' : 'border-cyan-400';
+            const textShadow = isFake ? 'text-shadow: 0 0 5px var(--color-red-security);' : 'text-shadow: 0 0 5px var(--color-blue-electric);';
+            
+            resultContent.innerHTML = `
+                <div class="border ${borderClass} p-4 text-center">
+                    <i class="fas ${icon} text-4xl ${colorClass} mb-3" style="${textShadow}"></i>
+                    <h4 class="text-xl font-extrabold ${colorClass} mb-2" style="${textShadow}">${result.prediction}</h4>
+                    <p class="text-sm text-gray-400">STATUS: COMPLETE</p>
+                    ${createConfidenceMeter(result.confidence, isFake)}
+                    ${result.raw_score !== undefined 
+                        ? `<p class="text-xs text-gray-500 mt-3">RAW SCORE: ${result.raw_score.toFixed(4)}</p>` 
+                        : ''
+                    }
+                </div>
+            `;
+            
+            // Removed faceSection logic
+            // if (result.face_detected) {
+            //     faceSection.classList.remove('hidden');
+            //     detectedFaceImg.src = result.face_image; 
+            //     detectedFaceImg.alt = "Detected Face Bounding Box";
+            // } else {
+            //     faceSection.classList.add('hidden');
+            // }
+            
+            resultsSection.classList.remove('hidden');
+        }
+        
+        // Show error message
+        function showError(message) {
+            errorText.textContent = message;
+            errorMessage.classList.remove('hidden');
+            resultsSection.classList.add('hidden');
+        }
+
+        // Initialize with default icon
+        document.addEventListener('DOMContentLoaded', () => {
+            originalMedia.innerHTML = `<i class="fas fa-video text-6xl text-gray-700"></i>`;
+        });
+    </script>
+</body>
+</html>

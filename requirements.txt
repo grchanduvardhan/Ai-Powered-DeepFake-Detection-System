@@ -1,0 +1,18 @@
+# IMPORTANT: TensorFlow requires Python 3.8-3.12
+# If you have Python 3.14+, please use Python 3.11 or 3.12 instead
+# See INSTALLATION_GUIDE.md for detailed instructions
+tensorflow>=2.15.0
+
+opencv-python>=4.7.0
+mtcnn>=0.1.1
+numpy>=1.23.0,<2.0.0
+pandas>=1.5.0
+scikit-learn>=1.2.0
+flask>=2.3.0
+pillow>=9.5.0
+# Keras is included with TensorFlow 2.15+, but keeping for compatibility
+keras>=2.15.0
+
+# Kaggle dataset downloader (optional, for downloading datasets)
+kagglehub>=0.2.0
+
