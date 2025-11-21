@@ -10,9 +10,26 @@ This project implements an end-to-end DeepFake detection system that can:
 - Classify media as "REAL" or "FAKE" with confidence scores
 - Provide a modern web interface for easy interaction
 
+---
+
 ## 🎥 Demo Video
 
 [![Watch the demo](https://img.shields.io/badge/Watch-Demo%20Video-blue?style=for-the-badge&logo=github)](./demo_video.mp4)
+
+---
+
+## Project Output Images
+
+<img src="project_images/Output%201.png" alt="" width="600"/>
+<img src="project_images/Output%202.png" alt="" width="600"/>
+
+---
+
+## Simple Architecture Diagram
+<img src="project_images/Architecture%20Diagram.png" alt="" width="600"/>
+
+---
+
 
 ## 📁 Project Structure
 
@@ -44,6 +61,8 @@ This project implements an end-to-end DeepFake detection system that can:
 |-- requirements.txt         # Python dependencies
 |-- README.md                # This file
 ```
+
+---
 
 ## 🚀 Setup Instructions
 
