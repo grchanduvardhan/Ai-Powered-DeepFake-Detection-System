@@ -1,4 +1,4 @@
-# AI-Based DeepFake Detection System
+# AI-Powered DeepFake Detection System
 
 A comprehensive deep learning-based system for detecting DeepFake images and videos using transfer learning with TensorFlow/Keras and a user-friendly Flask web interface.
 
@@ -294,10 +294,6 @@ This project is provided as-is for educational and research purposes.
   - Flask for web interface
   - Tailwind CSS for styling
 
-<<<<<<< HEAD
----
-=======
->>>>>>> 8c06eef68fa4627d5742e5b3b1ecc0d152240706
 
 ## Future Enhancements
 
