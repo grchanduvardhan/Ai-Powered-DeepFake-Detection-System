@@ -294,13 +294,6 @@ This project is provided as-is for educational and research purposes.
   - Flask for web interface
   - Tailwind CSS for styling
 
-## 📧 Support
-
-For issues or questions, please check the code comments or refer to the documentation of the respective libraries used in this project.
-
----
-
-**Happy DeepFake Detecting! 🛡️**
 
 ## Future Enhancements
 
