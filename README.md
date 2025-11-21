@@ -1,4 +1,4 @@
-# AI-Based DeepFake Detection System
+# AI-Powered DeepFake Detection System
 
 A comprehensive deep learning-based system for detecting DeepFake images and videos using transfer learning with TensorFlow/Keras and a user-friendly Flask web interface.
 
