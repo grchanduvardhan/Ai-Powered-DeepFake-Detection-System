@@ -179,30 +179,7 @@ This will generate:
    - Click "Detect DeepFake" to analyze the file
    - View the results with confidence scores
 
-## 📖 Usage Examples
 
-### Command Line Prediction
-
-You can also use the prediction functions directly in Python:
-
-```python
-import tensorflow as tf
-from tensorflow import keras
-from mtcnn import MTCNN
-import predict
-
-# Load model and detector
-model = keras.models.load_model('./models/deepfake_detector_best.h5')
-detector = MTCNN()
-
-# Predict on an image
-result = predict.predict_image('path/to/image.jpg', model, detector)
-print(result)
-
-# Predict on a video
-result = predict.predict_video('path/to/video.mp4', model, detector, num_frames=30)
-print(result)
-```
 
 ## 🔧 Technical Details
 
